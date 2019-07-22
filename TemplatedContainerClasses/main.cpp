@@ -3,11 +3,8 @@
 *	Code Design and Data Structures
 *   Assessable Exercise 1 - Templated Containers
 */
-#include <iostream>
 #include "pch.h"
 #include "assert.h"
-
-void TestDynamicArray();
 
 template <typename T>
 class DynamicArray {
@@ -176,38 +173,144 @@ public:
 
 
 template <typename T>
-class Node {
-protected:
-	T			data;
-	Node*		previous;
-	Node*		next;
-
-};
-
-template <typename T>
 class LinkedList {
+	class Node {
+	public:
+		T			data;
+		Node*		previous;
+		Node*		next;
+
+		// Constructors
+		Node()
+		{
+			previous = nullptr;
+			next = nullptr;
+		}
+
+		Node(T newData) 
+		{
+			data = newData;
+			previous = nullptr;
+			next = nullptr;
+		}
+	};
+
+	class Iterator {
+	private:
+		Node* position;
+		Iterator(Node pos) {
+			position = pos;
+		}
+	public:
+		Iterator() { Position = NULL; }
+		Iterator operator++() { // stesp to next data node if there is one
+			
+		}
+		Iterator operator++(int Dummy) {// step to next data node if there is one
+			
+		}
+		Iterator operator--() {// step to previous node if there is one
+			
+		}
+		Iterator operator--(int Dummy) {// step to previous node if there is one
+			
+		}
+		bool operator==(const Iterator& other) const { // Checks if iterators have same target
+			
+		}
+		bool operator!=(const Iterator& RHS) const { // Checks if iterators don't have same target
+			
+	};
+
 private:
+	int				nodecount;
 	Node*			head;
 	Node*			tail;
-	using iterator = Node * ;
-public:
-	void pushFront(T value); // add a new value to the front of the list
-	void pushBack(T value); // add a new value to the end of the list
-	void insert(iterator it, int value); // add a new value one past the specified iterator location
-	iterator begin(); // return an iterator to the first element
-	iterator end(); // return an iterator to a null element
-	T& first(); // return the first element by value, assert if no elements
-	T& last(); // return the last element by value, assert if no elements
-	int count(); // return how many elements exist in the list
-	void erase(iterator it); // remove an element by its iterator
-	void remove(T value); // remove all elements with matching value
-	void popBack(); // remove the last element
-	void popFront(); // remove the first element
-	bool empty(); // return a Boolean, true if the list is empty, false otherwise
-	void clear(); // remove all elements from the list
 
+public:
+	// Constructor
+	LinkedList(){
+		head = new Node<Y>();
+		tail = new Node<Y>();
+	}
+	
+	// Destructor
+	~LinkedList() {
+		clear();
+		delete *head;
+		delete *tail;
+	}
+	
+	void pushFront(T value) // add a new value to the front of the list
+	{
+
+	}
+	void pushBack(T value) // add a new value to the end of the list
+	{
+
+	}
+
+	void insert(iterator it, int value) // add a new value one past the specified iterator location
+	{
+
+	}
+	
+	iterator begin() // return an iterator to the first element
+	{
+
+	}
+	iterator end() // return an iterator to a null element
+	{
+
+	}
+	
+	T& first() // return the first element by value, assert if no elements
+	{
+
+	}
+	T& last() // return the last element by value, assert if no elements
+	{
+
+	}
+	
+	int count() // return how many elements exist in the list
+	{
+
+	}
+	
+	void erase(iterator it) // remove an element by its iterator
+	{
+
+	}
+	void remove(T value) // remove all elements with matching value
+	{
+
+	}
+	
+	void popBack() // remove the last element
+	{
+
+	}
+	void popFront() // remove the first element
+	{
+
+	}
+
+	bool empty() // return a Boolean, true if the list is empty, false otherwise
+	{
+
+	}
+	void clear() // remove all elements from the list
+	{
+
+	}
+	
 };
 
+
+#include <iostream>
+
+void TestDynamicArray();
 
 int main()
 {
@@ -216,7 +319,6 @@ int main()
 }
 
 void TestDynamicArray() {
-
 	DynamicArray<int> testArray = DynamicArray<int>();
 	std::cout << "Elements in array: " << testArray.getCount() << std::endl;
 	std::cout << "Capacity of Array: " << testArray.getCapacity() << std::endl;
