@@ -202,8 +202,8 @@ class LinkedList {
 			position = pos;
 		}
 	public:
-		Iterator() { Position = NULL; }
-		Iterator operator++() { // stesp to next data node if there is one
+		/*Iterator() { position = nullptr; }
+		Iterator operator++() { // steps to next data node if there is one
 			
 		}
 		Iterator operator++(int Dummy) {// step to next data node if there is one
@@ -219,88 +219,129 @@ class LinkedList {
 			
 		}
 		bool operator!=(const Iterator& RHS) const { // Checks if iterators don't have same target
-			
+		}*/
 	};
 
 private:
-	int				nodecount;
+	int				nodecount = 0;
 	Node*			head;
 	Node*			tail;
 
 public:
 	// Constructor
 	LinkedList(){
-		head = new Node<Y>();
-		tail = new Node<Y>();
+		head = nullptr;
+		tail = nullptr;
 	}
 	
 	// Destructor
 	~LinkedList() {
-		clear();
+		Clear();
 		delete *head;
 		delete *tail;
 	}
-	
-	void pushFront(T value) // add a new value to the front of the list
-	{
 
-	}
-	void pushBack(T value) // add a new value to the end of the list
-	{
+	void PrintLinkedList() {
+		Node *temp = head;
+		std::cout << std::endl << "Print forwards" << std::endl;
+		std::cout << temp->data << ":";
+		while (temp->next != nullptr) {
+			temp = temp->next;
+			std::cout << temp->data << ":";
+		}
 
-	}
-
-	void insert(iterator it, int value) // add a new value one past the specified iterator location
-	{
-
-	}
-	
-	iterator begin() // return an iterator to the first element
-	{
-
-	}
-	iterator end() // return an iterator to a null element
-	{
-
+		Node *temp2 = tail;
+		std::cout << std::endl << "Print backwards" << std::endl;
+		std::cout << temp2->data << ":";
+		while (temp2->previous != nullptr) {
+			temp2 = temp2->previous;
+			std::cout << temp2->data << ":";
+		}
 	}
 	
-	T& first() // return the first element by value, assert if no elements
+	void PushFront(T value) // add a new value to the front of the list
 	{
-
+		Node *node = new Node(value);
+		Node *temp = head;
+		if (head == nullptr) {
+			head = node;
+			tail = node;
+		}
+		else {
+			node->next = head;
+			head = node;
+			node->next->previous = node;
+			while (temp->next != nullptr) {
+				temp = temp->next;
+			}
+			tail = temp;
+		}
+		nodecount++;
 	}
-	T& last() // return the last element by value, assert if no elements
+	void PushBack(T value) // add a new value to the end of the list
+	{
+		Node *node = new Node(value);
+		if (tail->next == nullptr) {
+			node->previous = tail;
+			tail->next = node;
+			tail = node;
+		}
+		nodecount++;
+	}
+
+	void Insert(Iterator it, T value) // add a new value one past the specified iterator location
 	{
 
 	}
 	
-	int count() // return how many elements exist in the list
+	Iterator Begin() // return an iterator to the first element
+	{
+		return NULL;
+	}
+	Iterator End() // return an iterator to a null element
+	{
+		return NULL;
+
+	}
+	
+	T& First() // return the first element by value, assert if no elements
+	{
+		return head->data;
+	}
+	T& Last() // return the last element by value, assert if no elements
+	{
+		return tail->data;
+
+	}
+	
+	int Count() // return how many elements exist in the list
+	{
+		return nodecount;
+	}
+	
+	void Erase(Iterator it) // remove an element by its iterator
+	{
+
+	}
+	void Remove(T value) // remove all elements with matching value
 	{
 
 	}
 	
-	void erase(iterator it) // remove an element by its iterator
+	void PopBack() // remove the last element
 	{
 
 	}
-	void remove(T value) // remove all elements with matching value
-	{
-
-	}
-	
-	void popBack() // remove the last element
-	{
-
-	}
-	void popFront() // remove the first element
+	void PopFront() // remove the first element
 	{
 
 	}
 
-	bool empty() // return a Boolean, true if the list is empty, false otherwise
+	bool Empty() // return a Boolean, true if the list is empty, false otherwise
 	{
 
 	}
-	void clear() // remove all elements from the list
+	void Clear() // remove all elements from the list
 	{
 
 	}
@@ -314,7 +355,24 @@ void TestDynamicArray();
 
 int main()
 {
-	TestDynamicArray();
+	LinkedList<int>* linkedL = new LinkedList<int>();
+	linkedL->PushFront(1);
+	linkedL->PrintLinkedList();
+	linkedL->PushFront(3);
+	linkedL->PrintLinkedList();
+	linkedL->PushBack(4);
+	linkedL->PrintLinkedList();
+	linkedL->PushFront(5);
+	linkedL->PrintLinkedList();
+
+	std::cout << std::endl;
+	std::cout << linkedL->First() << std::endl;
+	std::cout << linkedL->Last() << std::endl;
+	std::cout << "Total Elements: " << linkedL->Count() << std::endl;
+
+
+
+	//TestDynamicArray();
 	return 0;
 }
 
