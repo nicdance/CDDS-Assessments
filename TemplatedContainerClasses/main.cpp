@@ -196,30 +196,31 @@ class LinkedList {
 	};
 
 	class Iterator {
-	private:
+	protected:
 		Node* position;
+	public:
 		Iterator(Node pos) {
 			position = pos;
 		}
-	public:
-		/*Iterator() { position = nullptr; }
-		Iterator operator++() { // steps to next data node if there is one
-			
-		}
-		Iterator operator++(int Dummy) {// step to next data node if there is one
-			
+		Iterator() { position = nullptr; }
+
+		Iterator& operator++() { // steps to next data node if there is one
+			position = position->next;
+			return *this;
 		}
 		Iterator operator--() {// step to previous node if there is one
-			
+			position = position->previous;
+			return *this;
 		}
-		Iterator operator--(int Dummy) {// step to previous node if there is one
-			
+		bool operator==(const Iterator& other)  { // Checks if iterators have same target
+			return position == other.position;
 		}
-		bool operator==(const Iterator& other) const { // Checks if iterators have same target
-			
+		bool operator!=(const Iterator& other)  { // Checks if iterators don't have same target
+			return position != other.position;
 		}
-		bool operator!=(const Iterator& RHS) const { // Checks if iterators don't have same target
-		}*/
+		int& operator*() {
+			return position->value;
+		}
 	};
 
 private:
@@ -291,17 +292,33 @@ public:
 
 	void Insert(Iterator it, T value) // add a new value one past the specified iterator location
 	{
+		Node * node = new Node(value);
 
+		if (head == nullptr) {
+			head = node;
+			tail = node;
+		}
+		if (it->position.next == NULL) {
+			it->position.next = node;
+			node->previous = it->position;
+			tail = node;
+		}
+		else {
+			node->next = it->position.next;
+			it->position.next = node;
+			node->previous = it->position;
+			node->next->previous = node;
+		}
+		nodecount++;
 	}
 	
 	Iterator Begin() // return an iterator to the first element
 	{
-		return NULL;
+		return Iterator(head);
 	}
 	Iterator End() // return an iterator to a null element
 	{
-		return NULL;
-
+		return Iterator(tail);
 	}
 	
 	T& First() // return the first element by value, assert if no elements
@@ -364,6 +381,13 @@ int main()
 	linkedL->PrintLinkedList();
 	linkedL->PushFront(5);
 	linkedL->PrintLinkedList();
+
+
+	
+	//for (auto i = linkedL->Begin(); i != linkedL->End(); i++)
+	//{
+	//	std::cout << *i << " ";
+	//}
 
 	std::cout << std::endl;
 	std::cout << linkedL->First() << std::endl;
