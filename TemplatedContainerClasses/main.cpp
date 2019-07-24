@@ -6,6 +6,7 @@
 #include "pch.h"
 #include "assert.h"
 
+
 template <typename T>
 class DynamicArray {
 private:
@@ -173,60 +174,65 @@ public:
 
 
 template <typename T>
+class Node {
+public:
+	T			data;
+	Node*		previous;
+	Node*		next;
+
+	// Constructors
+	Node()
+	{
+		previous = nullptr;
+		next = nullptr;
+	}
+
+	Node(T newData)
+	{
+		data = newData;
+		previous = nullptr;
+		next = nullptr;
+	}
+};
+
+
+template <typename T>
+class Iterator {
+protected:
+	Node<T>* position;
+public:
+	Iterator(Node<T> pos) {
+		position = pos;
+	}
+	Iterator() { position = nullptr; }
+
+	Iterator& operator++() { // steps to next data node if there is one
+		position = position->next;
+		return *this;
+	}
+	Iterator operator--() {// step to previous node if there is one
+		position = position->previous;
+		return *this;
+	}
+	bool operator==(const Iterator& other) { // Checks if iterators have same target
+		return position == other.position;
+	}
+	bool operator!=(const Iterator& other) { // Checks if iterators don't have same target
+		
+		return position != other.position;
+	}
+	T& operator*() {
+		return position->data;
+	}
+};
+
+template <typename T>
 class LinkedList {
-	class Node {
-	public:
-		T			data;
-		Node*		previous;
-		Node*		next;
-
-		// Constructors
-		Node()
-		{
-			previous = nullptr;
-			next = nullptr;
-		}
-
-		Node(T newData) 
-		{
-			data = newData;
-			previous = nullptr;
-			next = nullptr;
-		}
-	};
-
-	class Iterator {
-	protected:
-		Node* position;
-	public:
-		Iterator(Node pos) {
-			position = pos;
-		}
-		Iterator() { position = nullptr; }
-
-		Iterator& operator++() { // steps to next data node if there is one
-			position = position->next;
-			return *this;
-		}
-		Iterator operator--() {// step to previous node if there is one
-			position = position->previous;
-			return *this;
-		}
-		bool operator==(const Iterator& other)  { // Checks if iterators have same target
-			return position == other.position;
-		}
-		bool operator!=(const Iterator& other)  { // Checks if iterators don't have same target
-			return position != other.position;
-		}
-		int& operator*() {
-			return position->value;
-		}
-	};
-
+	
 private:
 	int				nodecount = 0;
-	Node*			head;
-	Node*			tail;
+	Node<T>*			head;
+	Node<T>*			tail;
 
 public:
 	// Constructor
@@ -243,27 +249,74 @@ public:
 	}
 
 	void PrintLinkedList() {
-		Node *temp = head;
-		std::cout << std::endl << "Print forwards" << std::endl;
-		std::cout << temp->data << ":";
-		while (temp->next != nullptr) {
-			temp = temp->next;
-			std::cout << temp->data << ":";
+		T value;
+		std::cout << std::endl << "From Begin" << std::endl;
+		Iterator<T> begin = Begin();
+		Iterator<T> end = End();
+		do {
+			value = *begin;
+			std::cout << (value) << ":";
+			++begin;
+		} while (begin != end);
+
+		/*
+		Iterator<T> begin2 = Begin();
+		Iterator<T> end2 = End();
+
+		std::cout << std::endl << "From End" << std::endl;
+		do {
+			value = *end2;
+			std::cout << value << ":";
+			end2--;
+		} while (end2 != begin2);
+		
+
+		T value;
+		std::cout << std::endl << "From Begin" << std::endl;
+		Iterator<T>* begin = Begin();
+		Iterator<T>* end = End();
+		do {
+			value = **begin;
+			std::cout << (value) << ":";
+			begin++;
+		} while (begin != end);
+
+		Iterator<T>* begin2 = Begin();
+		Iterator<T>* end2 = End();
+
+		std::cout << std::endl << "From End" << std::endl;
+		do {
+			value = **end2;
+			std::cout << value << ":";
+			end2--;
+		} while (end2 != begin2);
+
+
+
+
+
+
+		Iterator<T> temp = Begin();
+		std::cout << temp->position->data << ":";
+		while (temp->position->next != nullptr) {
+			temp->position = temp->position->next;
+			std::cout << temp->position->data << ":";
 		}
 
-		Node *temp2 = tail;
+		Iterator<T> *temp2 = End();
 		std::cout << std::endl << "Print backwards" << std::endl;
-		std::cout << temp2->data << ":";
-		while (temp2->previous != nullptr) {
-			temp2 = temp2->previous;
-			std::cout << temp2->data << ":";
+		std::cout << temp2->position->data << ":";
+		while (temp2->position->previous != nullptr) {
+			temp2->position = temp2->position->previous;
+			std::cout << temp2->position->data << ":";
 		}
+		*/
 	}
 	
 	void PushFront(T value) // add a new value to the front of the list
 	{
-		Node *node = new Node(value);
-		Node *temp = head;
+		Node<T> *node = new Node<T>(value);
+		Node<T> *temp = head;
 		if (head == nullptr) {
 			head = node;
 			tail = node;
@@ -281,7 +334,7 @@ public:
 	}
 	void PushBack(T value) // add a new value to the end of the list
 	{
-		Node *node = new Node(value);
+		Node<T> *node = new Node<T>(value);
 		if (tail->next == nullptr) {
 			node->previous = tail;
 			tail->next = node;
@@ -290,7 +343,8 @@ public:
 		nodecount++;
 	}
 
-	void Insert(Iterator it, T value) // add a new value one past the specified iterator location
+
+	void Insert(Iterator<T> it, T value) // add a new value one past the specified iterator location
 	{
 		Node * node = new Node(value);
 
@@ -311,16 +365,30 @@ public:
 		}
 		nodecount++;
 	}
-	
-	Iterator Begin() // return an iterator to the first element
+	/*
+	Iterator<T> Begin() // return an iterator to the first element
 	{
-		return Iterator(head);
+
+		return Iterator<T>(head);
 	}
-	Iterator End() // return an iterator to a null element
+	Iterator<T> End() // return an iterator to a null element
 	{
-		return Iterator(tail);
+		return Iterator<T>(tail);
 	}
+	*/
+
 	
+	Iterator<T> Begin() // return an iterator to the first element
+	{
+		Iterator<T>  iterator = new Iterator<T>(head);
+		return iterator;
+	}
+	Iterator<T> End() // return an iterator to a null element
+	{
+		Iterator<T> iterator = new Iterator<T>(tail);
+		return iterator;
+	}
+
 	T& First() // return the first element by value, assert if no elements
 	{
 		return head->data;
@@ -336,7 +404,7 @@ public:
 		return nodecount;
 	}
 	
-	void Erase(Iterator it) // remove an element by its iterator
+	void Erase(Iterator<T> it) // remove an element by its iterator
 	{
 
 	}
