@@ -5,12 +5,14 @@
 */
 
 #include "DynamicArray.h"
+#include <time.h>       /* time */
 #include <iostream>
 
 
 void PrintArray(DynamicArray<int> &array);
 void SortArray(DynamicArray<int> &array);
 void BubbleSortArray(DynamicArray<int> &array);
+void InsertionSortArray(DynamicArray<int> &array);
 void SearchArray(DynamicArray<int> &array);
 void AddValue(DynamicArray<int> &array);
 
@@ -20,13 +22,14 @@ int main()
 	bool keepGoing = true;
 	int errorcode = 0;
 
-	dynamicArray->pushToEnd(10);
-	dynamicArray->pushToEnd(1);
-	dynamicArray->pushToEnd(300);
-	dynamicArray->pushToEnd(25);
-	dynamicArray->pushToEnd(110);
-	dynamicArray->pushToEnd(25);
-	dynamicArray->pushToEnd(6);
+	srand(time(nullptr));
+	
+
+	for (int i = 0; i < 20; i++)
+	{
+		dynamicArray->pushToEnd(rand()%1000);
+
+	}
 
 	system("cls");
 	while (keepGoing)
@@ -123,7 +126,7 @@ void SortArray(DynamicArray<int> &array)
 
 		std::cout << "How would you like to sort your DynamicArray?" << std::endl;
 		std::cout << "1. Bubble Sort" << std::endl;
-		std::cout << "2. " << std::endl;
+		std::cout << "2. Insertion Sort" << std::endl;
 		std::cout << "3. " << std::endl;
 		std::cout << "0. Quit " << std::endl;
 
@@ -146,6 +149,7 @@ void SortArray(DynamicArray<int> &array)
 				keepGoing = false;
 				break;
 			case 2:
+				InsertionSortArray(array);
 				keepGoing = false;
 				break;
 			case 3:
@@ -176,6 +180,21 @@ void BubbleSortArray(DynamicArray<int> &array)
 				array[j] = temp;
 			}
 		}
+	}
+}
+
+void InsertionSortArray(DynamicArray<int> &array)
+{
+	for (int i = 1; i < array.getCount(); i++)
+	{
+		int key = array[i];
+		int j = i - 1;
+		while (j>=0 && array[j]>key)
+		{
+			array[j + 1] = array[j];
+			j = j - 1;
+		}
+		array[j+1] = key;
 	}
 }
 
