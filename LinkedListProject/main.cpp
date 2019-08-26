@@ -31,6 +31,8 @@ int main()
 			linkedL->Insert(iterator, 3);
 		}
 	}
+
+
 	linkedL->PrintLinkedList();
 
 	linkedL->PushBack(4);
@@ -42,6 +44,8 @@ int main()
 	linkedL->Remove(2);
 	linkedL->PrintLinkedList();
 
+
+	linkedL->Remove(999);
 
 	for (auto iterator = linkedL->Begin(); iterator.currentNode != NULL; ++iterator)
 	{

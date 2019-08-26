@@ -148,6 +148,8 @@ public:
 		}
 		nodecount--;
 	}
+
+	/// LOOK HERE
 	void Remove(T value) // remove all elements with matching value
 	{
 		for (auto iterator = Begin(); iterator.currentNode != nullptr; ++iterator)
