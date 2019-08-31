@@ -13,6 +13,8 @@ void PrintArray(DynamicArray<int> &array);
 void SortArray(DynamicArray<int> &array);
 void BubbleSortArray(DynamicArray<int> &array);
 void InsertionSortArray(DynamicArray<int> &array);
+void SelectionSortArray(DynamicArray<int> &array);
+void swap(int *valueOne, int *valueTwo);
 void SearchArray(DynamicArray<int> &array);
 void AddValue(DynamicArray<int> &array);
 
@@ -34,7 +36,7 @@ int main()
 	system("cls");
 	while (keepGoing)
 	{
-		std::cout << std::endl << "SEARCHING AND SORTING ASSESSMENT" << std::endl;
+		std::cout << "SEARCHING AND SORTING ASSESSMENT" << std::endl;
 
 		switch (errorcode)
 		{
@@ -48,7 +50,7 @@ int main()
 			break;
 		}
 
-		std::cout << "What would you like to do?" << std::endl;
+		std::cout << std::endl << "What would you like to do?" << std::endl;
 		std::cout << "1. Add a number to the DynamicArray." << std::endl;
 		std::cout << "2. Sort the DynamicArray" << std::endl;
 		std::cout << "3. Search the DynamicArray" << std::endl;
@@ -76,20 +78,21 @@ int main()
 				SortArray(*dynamicArray);
 				break;
 			case 3:
+				SearchArray(*dynamicArray);				
 				break;
 			case 4:
 				PrintArray(*dynamicArray);
 				break;
 			case 0:
 				keepGoing = false;
-				std::cout << " =) Good Bye!";
+				std::cout << std::endl << " =) Good Bye!";
 				break;
 			default:
 				errorcode = 2;
 				break;
 			}
 		}
-
+		std::cout <<  std::endl;
 	}
 
 
@@ -98,11 +101,12 @@ int main()
 
 
 void PrintArray(DynamicArray<int> &array) {
-	std::cout << "Printing DynamicArray" << std::endl;
+	std::cout << std::endl << "-- Printing DynamicArray --" << std::endl;
 	for (int i = 0; i < array.getCount(); i++)
 	{
 		std::cout << array[i] << ", ";
 	}
+	std::cout << std::endl;
 }
 
 void SortArray(DynamicArray<int> &array) 
@@ -112,7 +116,7 @@ void SortArray(DynamicArray<int> &array)
 
 	while (keepGoing)
 	{
-		std::cout << std::endl << "Lets sort Your array" << std::endl;
+		std::cout << std::endl << "Sort Array" << std::endl;
 
 		switch (errorcode)
 		{
@@ -127,7 +131,7 @@ void SortArray(DynamicArray<int> &array)
 		std::cout << "How would you like to sort your DynamicArray?" << std::endl;
 		std::cout << "1. Bubble Sort" << std::endl;
 		std::cout << "2. Insertion Sort" << std::endl;
-		std::cout << "3. " << std::endl;
+		std::cout << "3. Selection Sort" << std::endl;
 		std::cout << "0. Quit " << std::endl;
 
 		int selection = 0;
@@ -153,6 +157,7 @@ void SortArray(DynamicArray<int> &array)
 				keepGoing = false;
 				break;
 			case 3:
+				SelectionSortArray(array);
 				keepGoing = false;
 				break;
 			case 0:
@@ -169,22 +174,28 @@ void SortArray(DynamicArray<int> &array)
 
 void BubbleSortArray(DynamicArray<int> &array)
 {
+	std::cout << "- Unsorted Array -";
+	PrintArray(array);
+	std::cout << "Performing Bubble Sort" << std::endl;
 	for (int i = 0; i < array.getCount(); i++)
 	{
 		for (int j = array.getCount()-1; j >=i+1; j--)
 		{
 			if (array[j] < array[j-1])
 			{
-				int temp = array[j-1];
-				array[j-1] = array[j];
-				array[j] = temp;
+				swap(&array[j], &array[j-1]);
 			}
 		}
 	}
+	std::cout << "- Sorted Array -";
+	PrintArray(array);
 }
 
 void InsertionSortArray(DynamicArray<int> &array)
 {
+	std::cout << "- Unsorted Array -";
+	PrintArray(array);
+	std::cout << "Performing Insertion Sort" << std::endl;
 	for (int i = 1; i < array.getCount(); i++)
 	{
 		int key = array[i];
@@ -196,10 +207,80 @@ void InsertionSortArray(DynamicArray<int> &array)
 		}
 		array[j+1] = key;
 	}
+	std::cout << "- Sorted Array -";
+	PrintArray(array);
+}
+
+
+void SelectionSortArray(DynamicArray<int> &array)
+{
+	std::cout << "- Unsorted Array -" << std::endl;
+	PrintArray(array);
+	std::cout << "Performing Selection Sort" << std::endl << std::endl;
+	for (int i = 0; i < array.getCount() - 1; i++)
+	{
+		int minumumIndex = i;
+		for (int j = i + 1; j < array.getCount(); j++)
+		{
+			if (array[j] < array[minumumIndex])
+			{
+				minumumIndex = j;
+			}
+		}
+		swap(&array[minumumIndex], &array[i]);
+
+	}
+	std::cout << "- Sorted Array -";
+	PrintArray(array);
+}
+void swap(int *valueOne, int *valueTwo)
+{
+	int temp = *valueOne;
+	*valueOne = *valueTwo;
+	*valueTwo = temp;
 }
 
 void SearchArray(DynamicArray<int> &array)
 {
+	std::cout << std::endl << "Search Array " << std::endl;
+	int positionOfNumberToFind = rand()%array.getCount();
+	int numberTofind = array[positionOfNumberToFind];	
+	std::cout << "- Searching for " << numberTofind << std::endl;
+
+	bool searching = true;
+	int lower = 0;
+	int upper = array.getCount();
+
+	BubbleSortArray(array);
+	int count = 0;
+	while (searching)
+	{
+		count++;
+		// if upperBound < lowerBound
+		if (upper < lower)
+		{
+			std::cout << "Unable to locate " << numberTofind << "." << std::endl;
+			break;
+		}
+
+		int middle = ((upper - lower) / 2) + lower;
+		if (array[middle] < numberTofind)
+		{
+			lower = middle + 1;
+		}
+		else if (array[middle] > numberTofind)
+		{
+			upper = middle - 1;
+		}
+		else if (array[middle] == numberTofind)
+		{
+			std::cout << "Located " << numberTofind << " in " << count << " iterations." << std::endl;
+			searching = false;
+		}
+	}
+
+
+	std::cout << "End of SearchArray" << std::endl;
 }
 
 void AddValue(DynamicArray<int> &array) {

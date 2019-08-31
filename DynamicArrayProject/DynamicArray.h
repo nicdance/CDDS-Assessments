@@ -1,5 +1,8 @@
 #pragma once
+
 #include "assert.h"
+#include "MemoryLeakTest.h"
+
 
 template <typename T>
 class DynamicArray {
@@ -20,6 +23,7 @@ public:
 			totalMemoryAllocated = initial;
 			count = initial;
 			alocatedSpace = new T[initial];
+			//alocatedSpace = DBG_NEW T[initial];
 			for (int i = 0; i < initial; i++) {
 				alocatedSpace[i] = 0; // Fill the array with a default value of 0
 			}
@@ -45,8 +49,6 @@ public:
 	}
 	// Copy Constructor
 	DynamicArray(const DynamicArray& other) : DynamicArray(other.count) {
-		//totalMemoryAllocated = other.count;
-		//alocatedSpace = new int[totalMemoryAllocated];
 		for (int i = 0; i < totalMemoryAllocated; i++) {
 			alocatedSpace[i] = other.alocatedSpace[i];
 		}
@@ -117,6 +119,7 @@ public:
 		}
 		// allocate new array
 		T *temp = new T[size];
+		//T *temp = DBG_NEW T[size];
 		// Copy Balues from old to new Array
 		for (int i = 0; i < count; i++) {
 			temp[i] = alocatedSpace[i];

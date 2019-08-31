@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicArray.h" />
+    <ClInclude Include="MemoryLeakTest.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

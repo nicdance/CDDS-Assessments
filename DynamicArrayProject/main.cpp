@@ -8,6 +8,7 @@
 
 int main()
 {
+	//{
 	DynamicArray<int> testArray = DynamicArray<int>();
 	std::cout << "Elements in array: " << testArray.getCount() << std::endl;
 	std::cout << "Capacity of Array: " << testArray.getCapacity() << std::endl;
@@ -62,6 +63,11 @@ int main()
 		std::cout << testArray[i] << ",";
 	}
 	std::cout << std::endl;
+
+	//}
+	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+	//_CrtDumpMemoryLeaks();
 
 	system("pause");
 	return 0;

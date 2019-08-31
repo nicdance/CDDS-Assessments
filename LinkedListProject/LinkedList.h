@@ -1,6 +1,6 @@
 #pragma once
 #include "assert.h"
-
+#include "MemoryLeakTester.h"
 template <typename T>
 class LinkedList {
 	// Declares Classes in Linked List
@@ -22,66 +22,42 @@ public:
 	// Destructor
 	~LinkedList() {
 		Clear();
-		delete *head;
-		delete *tail;
+		delete head;
+		delete tail;
 	}
 
 	void PrintLinkedList() {
 		T value;
 		Iterator begin = { Begin() };
 		Iterator end = { End() };
-		std::cout << std::endl;
 		while (begin.currentNode != nullptr)
 		{
 			value = *begin;
 			std::cout << (value) << ":";
 			++begin;
 		}
+		std::cout << std::endl;
 
 	}
 
 	void PushFront(T value) // add a new value to the front of the list
 	{
+		std::cout << "PushFront " << std::endl;
 		Insert(Begin(), value);
-		/*
-		Node *node = new Node(value);
-		Node *temp = head;
-		if (head == nullptr) {
-			head = node;
-			tail = node;
-		}
-		else {
-			node->next = head;
-			head = node;
-			node->next->previous = node;
-			while (temp->next != nullptr) {
-				temp = temp->next;
-			}
-			tail = temp;
-		}
-		nodecount++;*/
 	}
 	void PushBack(T value) // add a new value to the end of the list
 	{
+		std::cout << "PushBack " << std::endl;
 		Insert(End(), value);
-		/*
-		Node *node = new Node(value);
-		if (tail == nullptr) {
-			head = node;
-			tail = node;
-		}
-		else {
-			node->previous = tail;
-			tail->next = node;
-			tail = node;
-		}
-		nodecount++;*/
 	}
 
 
 	void Insert(Iterator it, T value) // add a new value one past the specified iterator location
 	{
-		Node * node = new Node(value);
+
+		std::cout << "Insert " << value << std::endl;
+		//Node * node = new Node(value);
+		Node * node = DBG_NEW Node(value);
 
 		if (head == nullptr) {
 			head = node;
@@ -130,56 +106,86 @@ public:
 		return nodecount;
 	}
 
-	void Erase(Iterator it) // remove an element by its iterator
+	void Erase(Node *currentNode) // remove an element by its iterator
 	{
-		if (it == Begin())
+		if (currentNode == Begin().currentNode)
 		{
-			it.currentNode->next->previous = nullptr;
-			head = it.currentNode->next;
+			if (currentNode->next != nullptr)
+			{
+				std::cout << "Remove Start" << std::endl;
+				currentNode->next->previous = nullptr;
+				head = currentNode->next;
+			}
+			else
+			{
+				head = nullptr;
+			}
 		}
-		else if (it == End()) {
-			it.currentNode->previous->next = nullptr;
-			tail = it.currentNode->previous;
+		else if (currentNode == End().currentNode) {
+			std::cout << "Remove End" << std::endl;
+			currentNode->previous->next = nullptr;
+			tail = currentNode->previous;
 		}
 		else
 		{
-			it.currentNode->next->previous = it.currentNode->previous;
-			it.currentNode->previous->next = it.currentNode->next;
+			std::cout << "Remove Element " << std::endl;
+			currentNode->next->previous = currentNode->previous;
+			currentNode->previous->next = currentNode->next;
 		}
+		currentNode->next = nullptr;
+		currentNode->previous = nullptr;
+
+		delete (currentNode);
 		nodecount--;
 	}
 
 	/// LOOK HERE
 	void Remove(T value) // remove all elements with matching value
 	{
+		std::cout << "Remove " << value << std::endl;
 		for (auto iterator = Begin(); iterator.currentNode != nullptr; ++iterator)
 		{
 			if (*iterator == value) {
-				Erase(iterator);
+				Erase(iterator.currentNode);
+				break;
 			}
 		}
 	}
 
 	void PopBack() // remove the last element
 	{
+		std::cout << "PopBack" << std::endl;
 		if (head == tail)
 		{
 			head = nullptr;
 			tail = nullptr;
 		}
 		else {
-			Erase(End());
+			Erase(End().currentNode);
 		}
 	}
 	void PopFront() // remove the first element
 	{
-		if (head == tail)
+		std::cout << "PopFront" << std::endl;
+		if (head != nullptr)
 		{
-			head = nullptr;
-			tail = nullptr;
-		}
-		else {
-			Erase(Begin());
+			std::cout << "PopFront" << std::endl;
+			if (head->next == nullptr)
+			{
+				tail = nullptr;
+				delete head;
+				head = nullptr;
+			}
+			else if (head == tail)
+			{
+				//head = nullptr;
+				tail = nullptr;
+				delete head;
+				head = nullptr;
+			}
+			else {
+				Erase(Begin().currentNode);
+			}
 		}
 
 	}
@@ -212,8 +218,8 @@ public:
 	}
 
 	~Node() {
-		delete *previous;
-		delete *next;
+		delete previous;
+		delete next;
 	}
 
 	Node(T newData)
